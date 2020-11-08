@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
+from django.forms import inlineformset_factory
 from.models import *
 from .forms import OrderForm
 
@@ -31,16 +32,21 @@ def customer(request,pk_test):
     context = {'customer':customer,'orders':orders,'order_count':order_count}
     return render(request,'accounts/customer.html',context)
 
-def createOreder(request):
-    forms = OrderForm()
+def createOreder(request,pk):
+    OrderFormSet = inlineformset_factory(Customer,Order,fields=('product','status'),extra=10)
+    customer = Customer.objects.get(id=pk)
+    formset = OrderFormSet(queryset=Order.objects.none(),instance=customer)
+    # forms = OrderForm(initial={'customer':customer})
     if request.method == 'POST':
         # print('Printing POST:' , request.POST)
-        forms = OrderForm(request.POST)
-        if forms.is_valid():
-            forms.save()
+        # forms = OrderForm(request.POST)
+        formset = OrderFormSet(request.POST, instance=customer)
+
+        if formset.is_valid():
+            formset.save()
             return redirect('/')
 
-    context = {'forms':forms}
+    context = {'formset':formset,}
     return render(request,'accounts/order_form.html',context)
 
 def updateOrder(request,pk):
