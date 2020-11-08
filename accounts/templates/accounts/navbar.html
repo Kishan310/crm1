@@ -1,5 +1,13 @@
 {% load static %}
 
+<style>
+  .hello-msg{
+      fornt-size: 18px;
+      color : #fff;
+      margine-right : 20px;
+    }
+</style>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 <!--  <img src="{% static 'images/logo.png' %}" style="padding:5px">-->
   <a class="navbar-brand" href="#">Navbar</a>
@@ -16,4 +24,6 @@
       </li>
     </ul>
   </div>
+  <span class="hello-msg">Hello, {{request.user}} </span>
+  <span ><a class="hello-msg" style = "margin:20px" href="{% url 'logout' %}">Logout</a></span>
 </nav>
